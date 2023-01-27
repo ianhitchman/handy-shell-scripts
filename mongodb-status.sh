@@ -4,7 +4,7 @@
 # it restarts the service and writes the current date, time, output and process ID if available to a log file,
 # limiting the log file to a maximum of 1000 lines
 
-LOG_FILE="./logs/mongodb-status.log"
+LOG_FILE="/root/scripts/logs/mongodb-status.log"
 
 status=$(sudo systemctl status mongod)
 current_time=$(date +"%Y-%m-%d %T")
