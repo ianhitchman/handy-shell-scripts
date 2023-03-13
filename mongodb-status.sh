@@ -13,6 +13,7 @@ if echo "$status" | grep -qE "Active: running|Active: active"; then
   echo "[$current_time] Success $(echo "$status" | grep "Main PID")" >> $LOG_FILE
 else
   echo "[$current_time] Failed" >> $LOG_FILE
+  sudo service mongod restart
 fi
 
 lines=$(wc -l < $LOG_FILE)
