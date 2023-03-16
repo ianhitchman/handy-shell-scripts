@@ -6,14 +6,15 @@
 
 LOG_FILE="/root/scripts/logs/mongodb-status.log"
 
-status=$(sudo systemctl status mongod)
+status=$(sudo systemctl status mongodb.service)
 current_time=$(date +"%Y-%m-%d %T")
 
 if echo "$status" | grep -qE "Active: running|Active: active"; then
   echo "[$current_time] Success $(echo "$status" | grep "Main PID")" >> $LOG_FILE
 else
   echo "[$current_time] Failed" >> $LOG_FILE
-  sudo service mongod restart
+  sudo systemctl restart mongodb.service
+  echo "MongoDB database service has stopped running, and was restarted" | mail -s "MongoDB down" tessmarka@gmail.com
 fi
 
 lines=$(wc -l < $LOG_FILE)
