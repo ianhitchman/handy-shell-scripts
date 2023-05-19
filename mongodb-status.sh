@@ -15,6 +15,45 @@ else
   echo "[$current_time] Failed" >> $LOG_FILE
   sudo systemctl restart mongodb.service
   echo "MongoDB database service has stopped running, and was restarted" | mail -s "MongoDB down" tessmarka@gmail.com
+
+  status=$(sudo systemctl status mongodb.service)
+  if echo "$status" | grep -qE "Active: running|Active: active"; then
+    echo "[$current_time] Successfully restarted" >> $LOG_FILE
+  else
+    echo "[$current_time] Failed to restart" >> $LOG_FILE
+    
+    # Directory path
+    directory="/var/run/mongodb"
+
+    # Check if directory exists, and create it if it doesn't
+    if [ ! -d "$directory" ]; then
+      mkdir -p "$directory"
+      echo "Created directory: $directory" >> $LOG_FILE
+    fi
+
+    # File path
+    file="$directory/mongod.pid"
+
+    # Check if file exists, and create it if it doesn't
+    if [ ! -f "$file" ]; then
+      touch "$file"
+      echo "Created file: $file" >> $LOG_FILE
+    fi
+
+    # Change ownership of the file to mongod:mongod
+    chown mongod:mongod "$file"
+    echo "Changed ownership of $file to mongod:mongod" >> $LOG_FILE
+
+    # Restart service
+    sudo systemctl restart mongodb.service
+    status=$(sudo systemctl status mongodb.service)
+    if echo "$status" | grep -qE "Active: running|Active: active"; then
+      echo "[$current_time] Successfully restarted" >> $LOG_FILE
+    else
+      echo "[$current_time] Failed to restart" >> $LOG_FILE
+    fi
+
+  fi
 fi
 
 lines=$(wc -l < $LOG_FILE)
