@@ -1,13 +1,22 @@
 #!/bin/bash
 
 # Use script by passing username, password and path: ./mongodb-backup.sh USER PASSWORD PATH
+# If no arguments are passed, the script will use the environment variables: 
+# BACKUP_MONGO_USER
+# BACKUP_MONGO_PASSWORD
+# BACKUP_MONGO_PATH
 
 mongo_host="localhost"
 mongo_port="27017"
-mongo_user=$1
-mongo_password=$2
+mongo_user=${1:-$BACKUP_MONGO_USER}
+mongo_password=${2:-$BACKUP_MONGO_PASSWORD}
 mongo_auth_db="admin"
-backup_folder_root=$3
+backup_folder_root=${3:-$BACKUP_MONGO_PATH}
+
+if [[ -z "$backup_folder_root" ]]; then
+    echo "Backup folder not set. Aborting script."
+    exit 1
+fi
 
 # set the threshold date as two weeks ago
 threshold_date=$(date --date="-2 weeks" +%Y%m%d)
@@ -24,17 +33,19 @@ backup_path="${backup_folder_root}/$backup_parent_dir/$backup_child_dir"
 # create the backup parent directory if it doesn't exist
 mkdir -p "$backup_path"
 
-# loop through all directories in the parent directory
-for dir in */; do
+# loop through all directories in the backup root directory
+for dir in "$backup_folder_root"/*/; do
     # check if the directory name is in YYYYMMDD format
-    if [[ "$dir" =~ ^[0-9]{8}/$ ]]; then
-        # get the directory name as a date string
-        dir_date=$(echo "$dir" | sed 's/\///')
+    echo "Checking $dir"
+    if [[ "$dir" =~ ^$backup_folder_root/[0-9]{8}/$ ]]; then
+        # get the directory name as a date string        
+        dir_date=$(basename "$dir")
+        echo "Directory date: $dir_date"
         # compare the directory date to the threshold date
         if [ "$dir_date" -lt "$threshold_date" ]; then
             # delete the directory and its contents
             echo "Deleting $dir"
-            # rm -rf "$dir"
+            rm -rf "$dir"
         fi
     fi
 done
