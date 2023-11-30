@@ -55,8 +55,9 @@ mkdir -p "$backup_path"
 
 # Connect to MongoDB
 
-mongo_uri="mongodb://${mongo_user}:${mongo_password}@${mongo_host}:${mongo_port}/${mongo_auth_db}"
-mongo_cmd="mongo ${mongo_uri} --quiet"
+mongo_uri="mongodb://${mongo_user}:${mongo_password}@${mongo_host}:${mongo_port}/?authSource=${mongo_auth_db}"
+mongo_cmd="mongo \"${mongo_uri}\" --quiet"
+echo $mongo_uri
 
 # Get information about all current databases and collections
 declare -A db_current
