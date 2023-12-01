@@ -5,6 +5,17 @@
 # BACKUP_MONGO_USER
 # BACKUP_MONGO_PASSWORD
 # BACKUP_MONGO_PATH
+# Optionally, these variables can be specified in a separate file, config.sh instead.
+
+
+# Get the directory of the script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set the relative path to the config file
+CONFIG_FILE="$SCRIPT_DIR/config.sh"
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+fi
 
 mongo_host="localhost"
 mongo_port="27017"
