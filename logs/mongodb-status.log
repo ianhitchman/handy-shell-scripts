@@ -1,4 +1,3 @@
-[2023-11-25 11:50:01] Success  Main PID: 16903 (mongod)
 [2023-11-25 11:55:02] Success  Main PID: 16903 (mongod)
 [2023-11-25 12:00:01] Success  Main PID: 16903 (mongod)
 [2023-11-25 12:05:01] Success  Main PID: 16903 (mongod)
@@ -1630,3 +1629,4 @@ Changed ownership of /var/run/mongodb/mongod.pid to mongod:mongod
 [2023-12-01 02:30:01] Success  Main PID: 3302 (mongod)
 [2023-12-01 02:35:01] Success  Main PID: 3302 (mongod)
 [2023-12-01 02:40:01] Success  Main PID: 3302 (mongod)
+[2023-12-01 02:45:01] Success  Main PID: 3302 (mongod)
